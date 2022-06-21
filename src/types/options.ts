@@ -13,11 +13,19 @@ interface NonExistent {
     similarity: number;
 }
 
+interface TextFormatting {
+    bold: string;
+    italic: string;
+    underline: string;
+    strikethrough: string;
+}
+
 export interface Options {
     symbol: string;
     contentProp: string;
     help: HelpCommand;
-    nonexistent: NonExistent;
+    nonExistent: NonExistent;
+    textFormatting: TextFormatting;
 }
 
 export type DeepPartial<T> = T extends object

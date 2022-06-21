@@ -2,7 +2,6 @@ import EventEmitter from 'events';
 import { findBestMatch } from 'string-similarity';
 import merge from 'deepmerge';
 import { Command, CommandHandler, BaseMessage, Message, Options, DeepPartial } from '../types';
-import { boldText } from '../utils';
 
 export default abstract class Bot<
     Client extends EventEmitter = EventEmitter,
@@ -18,12 +17,18 @@ export default abstract class Bot<
             description: 'Gives information about every command',
             message: 'I can handle the following commands:',
         },
-        nonexistent: {
-            info: (commandName) => `${boldText(commandName)} doesn't exist.`,
+        nonExistent: {
+            info: (commandName) => `${this.boldText(commandName)} doesn't exist.`,
             suggestion: 'Maybe you meant',
             listEmoji: '✅',
-            help: (helpCommand) => `Send ${boldText(helpCommand)} for more info.`,
+            help: (helpCommand) => `Send ${this.boldText(helpCommand)} for more info.`,
             similarity: 0.5,
+        },
+        textFormatting: {
+            bold: '**',
+            italic: '*',
+            underline: '__',
+            strikethrough: '~~',
         },
     };
 
@@ -55,8 +60,8 @@ export default abstract class Bot<
     }
 
     private getFormattedDescription(name: string, description: string) {
-        const { help, nonexistent } = this.options;
-        return `${name === help.name ? help.emoji : nonexistent.listEmoji} ${boldText(
+        const { help, nonExistent: nonexistent } = this.options;
+        return `${name === help.name ? help.emoji : nonexistent.listEmoji} ${this.boldText(
             name,
         )}: ${description}`;
     }
@@ -101,7 +106,7 @@ export default abstract class Bot<
     private findSimilarCommands(input: string): string[] {
         const { ratings } = findBestMatch(input, Object.keys(this.commands));
         return ratings
-            .filter(({ rating }) => rating >= this.options.nonexistent.similarity)
+            .filter(({ rating }) => rating >= this.options.nonExistent.similarity)
             .sort((a, b) => b.rating - a.rating)
             .map(({ target }) => target);
     }
@@ -109,13 +114,13 @@ export default abstract class Bot<
     private getSimilarCommandsMessage(commandName: string): string {
         const commands = this.findSimilarCommands(commandName);
 
-        const { info, suggestion, listEmoji, help } = this.options.nonexistent;
+        const { info, suggestion, listEmoji, help } = this.options.nonExistent;
 
         let message = info(commandName);
 
         if (commands.length > 0) {
             message += `\n\n${suggestion}:\n`;
-            message += commands.map((name) => `${listEmoji} ${boldText(name)}`).join('\n');
+            message += commands.map((name) => `${listEmoji} ${this.boldText(name)}`).join('\n');
         }
 
         const { emoji: helpEmoji, name: helpName } = this.options.help;
@@ -137,6 +142,26 @@ export default abstract class Bot<
                   handler,
               })
             : console.log(`The ${commandName} command already exists`);
+    }
+
+    private static formatText(text: string, symbol: string) {
+        return symbol + text + symbol;
+    }
+
+    public boldText(text: string) {
+        return Bot.formatText(text, this.options.textFormatting.bold);
+    }
+
+    public italicText(text: string) {
+        return Bot.formatText(text, this.options.textFormatting.italic);
+    }
+
+    public underlineText(text: string) {
+        return Bot.formatText(text, this.options.textFormatting.underline);
+    }
+
+    public strikethroughText(text: string) {
+        return Bot.formatText(text, this.options.textFormatting.strikethrough);
     }
 
     public getCommand(name: string) {
