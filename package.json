@@ -1,0 +1,54 @@
+{
+    "name": "@totigm/bot-builder",
+    "version": "0.0.4",
+    "description": "This is a library to create bots for different platforms. It handles all the commands stuff behind the scenes, so you can focus on your bot's logic.",
+    "main": "dist/index.js",
+    "bin": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "start": "npm run dev",
+        "build": "tsc",
+        "prepublish": "tsc",
+        "dev": "nodemon --config nodemon.json src/index.ts",
+        "prod": "set NODE_ENV=prod && tsc && node ./dist/index.js",
+        "lint": "eslint src && prettier --check src",
+        "lint:fix": "eslint src --fix && prettier --write src"
+    },
+    "dependencies": {
+        "deepmerge": "^4.2.2",
+        "string-similarity": "^4.0.4",
+        "tslib": "^2.2.0"
+    },
+    "devDependencies": {
+        "@types/node": "^15.6.1",
+        "@types/string-similarity": "^4.0.0",
+        "@typescript-eslint/eslint-plugin": "^4.25.0",
+        "@typescript-eslint/parser": "^4.25.0",
+        "eslint": "^7.27.0",
+        "eslint-config-airbnb-typescript": "^12.3.1",
+        "eslint-config-prettier": "^8.3.0",
+        "eslint-plugin-import": "^2.23.4",
+        "eslint-plugin-jsx-a11y": "^6.4.1",
+        "eslint-plugin-prettier": "^3.4.0",
+        "eslint-plugin-react": "^7.24.0",
+        "nodemon": "^2.0.7",
+        "prettier": "^2.3.0",
+        "ts-node": "^10.0.0",
+        "typescript": "^4.3.2"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/totigm/bot-builder"
+    },
+    "keywords": [
+        "typescript",
+        "bot",
+        "builder"
+    ],
+    "author": "Toti Muñoz",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/totigm/bot-builder/issues"
+    },
+    "homepage": "https://github.com/totigm/bot-builder#readme"
+}
