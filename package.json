@@ -8,7 +8,7 @@
     "scripts": {
         "start": "npm run dev",
         "build": "tsc",
-        "prepublish": "tsc",
+        "prepublish": "npm run build",
         "dev": "nodemon --config nodemon.json src/index.ts",
         "prod": "set NODE_ENV=prod && tsc && node ./dist/index.js",
         "lint": "eslint src && prettier --check src",
