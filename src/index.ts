@@ -3,10 +3,10 @@ import Bot from "./bot";
 export { Bot };
 export {
     BaseMessage,
+    Message,
     Command,
     CommandHandler,
-    DeepPartial,
     HandlerMessage,
-    Message,
+    DeepPartial,
     Options,
 } from "./types";
