@@ -1,4 +1,4 @@
-import Bot from './bot';
+import Bot from "./bot";
 
 export { Bot };
 export {
@@ -9,4 +9,4 @@ export {
     HandlerMessage,
     Message,
     Options,
-} from './types';
+} from "./types";

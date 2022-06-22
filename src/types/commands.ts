@@ -1,5 +1,5 @@
-import EventEmitter from 'events';
-import { HandlerMessage, BaseMessage } from './messages';
+import EventEmitter from "events";
+import { HandlerMessage, BaseMessage } from "./messages";
 
 export type CommandHandler<Client extends EventEmitter, Message extends BaseMessage> = (
     message: HandlerMessage<Message>,

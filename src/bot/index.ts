@@ -1,7 +1,7 @@
-import EventEmitter from 'events';
-import { findBestMatch } from 'string-similarity';
-import merge from 'deepmerge';
-import { Command, CommandHandler, BaseMessage, Message, Options, DeepPartial } from '../types';
+import EventEmitter from "events";
+import { findBestMatch } from "string-similarity";
+import merge from "deepmerge";
+import { Command, CommandHandler, BaseMessage, Message, Options, DeepPartial } from "../types";
 
 export default abstract class Bot<
     Client extends EventEmitter = EventEmitter,
@@ -9,26 +9,26 @@ export default abstract class Bot<
 > {
     private commands: Record<string, Command<Client, BotMessage>> = {};
     private options: Options = {
-        symbol: '!',
-        contentProp: 'content',
+        symbol: "!",
+        contentProp: "content",
         help: {
-            name: 'help',
-            emoji: '❓',
-            description: 'Gives information about every command',
-            message: 'I can handle the following commands:',
+            name: "help",
+            emoji: "❓",
+            description: "Gives information about every command",
+            message: "I can handle the following commands:",
         },
         nonExistent: {
             info: (commandName) => `${this.boldText(commandName)} doesn't exist.`,
-            suggestion: 'Maybe you meant',
-            listEmoji: '✅',
+            suggestion: "Maybe you meant",
+            listEmoji: "✅",
             help: (helpCommand) => `Send ${this.boldText(helpCommand)} for more info.`,
             similarity: 0.5,
         },
         textFormatting: {
-            bold: '**',
-            italic: '*',
-            underline: '__',
-            strikethrough: '~~',
+            bold: "**",
+            italic: "*",
+            underline: "__",
+            strikethrough: "~~",
         },
     };
 
@@ -37,8 +37,8 @@ export default abstract class Bot<
         this.auth();
         this.addHelpCommand();
         this.addOnMessageListener();
-        this.client.on('ready', () => {
-            console.log('The client is ready!');
+        this.client.on("ready", () => {
+            console.log("The client is ready!");
         });
     }
 
@@ -53,7 +53,7 @@ export default abstract class Bot<
             let message = `${help.message}\n`;
             message += Object.entries(this.commands)
                 .map(([name, { description }]) => this.getFormattedDescription(name, description))
-                .join('\n');
+                .join("\n");
 
             return message;
         });
@@ -81,24 +81,24 @@ export default abstract class Bot<
                 ? command.handler(newMessage, this.client)
                 : this.getSimilarCommandsMessage(newMessage.command);
 
-            if (response && (typeof response === 'number' || response.length > 0))
+            if (response && (typeof response === "number" || response.length > 0))
                 message.reply(String(response));
         }
     }
 
     private addOnMessageListener() {
-        this.client.on('message', (message: BotMessage) => {
+        this.client.on("message", (message: BotMessage) => {
             this.handleMessage(message);
         });
     }
 
     private formatMessage(content: string): Message {
-        const splittedMessage = content.trim().split(' ');
+        const splittedMessage = content.trim().split(" ");
         const args = splittedMessage.slice(1);
 
         return {
             command: splittedMessage[0].substring(this.options.symbol.length).toLowerCase(),
-            text: args.join(' '),
+            text: args.join(" "),
             args,
         };
     }
@@ -120,7 +120,7 @@ export default abstract class Bot<
 
         if (commands.length > 0) {
             message += `\n\n${suggestion}:\n`;
-            message += commands.map((name) => `${listEmoji} ${this.boldText(name)}`).join('\n');
+            message += commands.map((name) => `${listEmoji} ${this.boldText(name)}`).join("\n");
         }
 
         const { emoji: helpEmoji, name: helpName } = this.options.help;
