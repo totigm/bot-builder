@@ -1,5 +1,5 @@
 {
-    "name": "@totigm/bot-builder",
+    "name": "chat-bot-builder",
     "version": "0.0.1",
     "description": "This is a library to create bots for different platforms. It handles all the commands stuff behind the scenes, so you can focus on your bot's logic.",
     "main": "dist/index.js",
@@ -7,9 +7,10 @@
     "types": "dist/index.d.ts",
     "scripts": {
         "start": "npm run dev",
+        "dev": "nodemon --config nodemon.json src/index.ts",
         "build": "tsc",
         "prepublish": "npm run build",
-        "dev": "nodemon --config nodemon.json src/index.ts",
+        "preprod": "npm run build",
         "prod": "set NODE_ENV=prod && tsc && node ./dist/index.js",
         "lint": "eslint src && prettier --check src",
         "lint:fix": "eslint src --fix && prettier --write src"
