@@ -50,12 +50,12 @@ export default abstract class Bot<
         // Specific commands help is missing
         // `You can use ${this.options.symbol}${this.options.help.name} [command name] to get more info about commands.`
         this.addCommand(help.name, help.description, () => {
-            let message = `${help.message}\n`;
-            message += Object.entries(this.commands)
+            const message = `${help.message}\n\n`;
+            const list = Object.entries(this.commands)
                 .map(([name, { description }]) => this.getFormattedDescription(name, description))
                 .join("\n");
 
-            return message;
+            return message + list;
         });
     }
 
