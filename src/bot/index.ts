@@ -66,19 +66,16 @@ export default abstract class Bot<
         )}: ${description}`;
     }
 
-    private handleMessage(message: BotMessage) {
+    private async handleMessage(message: BotMessage) {
         const content = message[this.options.contentProp] || message.body;
 
         if (content && content.startsWith(this.options.symbol)) {
-            const newMessage = {
-                ...message,
-                ...this.formatMessage(content),
-            };
+            const newMessage = Object.assign(message, this.formatMessage(content));
 
             const command = this.commands[newMessage.command];
 
             const response = command
-                ? command.handler(newMessage, this.client)
+                ? await command.handler(newMessage, this.client)
                 : this.getSimilarCommandsMessage(newMessage.command);
 
             if (response && (typeof response === "number" || response.length > 0))
