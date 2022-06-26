@@ -152,7 +152,8 @@ export default abstract class Bot<
     }
 
     private static formatText(text: string, symbol: string) {
-        return symbol + text + symbol;
+        const trimmedText = text.trim();
+        return trimmedText !== "" ? symbol + trimmedText + symbol : trimmedText;
     }
 
     public boldText(text: string) {
