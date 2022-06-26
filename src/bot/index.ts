@@ -11,17 +11,21 @@ export default abstract class Bot<
     private options: Options = {
         symbol: "!",
         contentProp: "content",
+        error: {
+            emoji: "❌",
+            message: "There was an error processing your command.",
+        },
         help: {
             name: "help",
             emoji: "❓",
-            description: "Gives information about every command",
+            description: "Gives information about every command.",
             message: "I can handle the following commands:",
         },
         nonExistent: {
             info: (commandName) => `${this.boldText(commandName)} doesn't exist.`,
-            suggestion: "Maybe you meant",
+            suggestion: "Maybe you meant:",
             listEmoji: "✅",
-            help: (helpCommand) => `Send ${this.boldText(helpCommand)} for more info.`,
+            helpInfo: (helpCommand) => `Send ${this.boldText(helpCommand)} for more info.`,
             similarity: 0.5,
         },
         textFormatting: {
@@ -74,11 +78,17 @@ export default abstract class Bot<
 
             const command = this.commands[newMessage.command];
 
-            const response = command
-                ? await command.handler(newMessage, this.client)
-                : this.getSimilarCommandsMessage(newMessage.command);
+            let response;
+            try {
+                response = command
+                    ? await command.handler(newMessage, this.client)
+                    : this.getSimilarCommandsMessage(newMessage.command);
+            } catch (error) {
+                console.error(error);
+                response = `${this.options.error.emoji} ${this.options.error.message}`;
+            }
 
-            if (response && (typeof response === "number" || response.length > 0))
+            if (response && (typeof response === "number" || response.trim() !== ""))
                 message.reply(String(response));
         }
     }
@@ -111,17 +121,17 @@ export default abstract class Bot<
     private getSimilarCommandsMessage(commandName: string): string {
         const commands = this.findSimilarCommands(commandName);
 
-        const { info, suggestion, listEmoji, help } = this.options.nonExistent;
+        const { info, suggestion, listEmoji, helpInfo } = this.options.nonExistent;
 
         let message = info(commandName);
 
         if (commands.length > 0) {
-            message += `\n\n${suggestion}:\n`;
+            message += `\n\n${suggestion}\n`;
             message += commands.map((name) => `${listEmoji} ${this.boldText(name)}`).join("\n");
         }
 
         const { emoji: helpEmoji, name: helpName } = this.options.help;
-        message += `\n\n${helpEmoji} ${help(this.options.symbol + helpName)}`;
+        message += `\n\n${helpEmoji} ${helpInfo(this.options.symbol + helpName)}`;
 
         return message;
     }

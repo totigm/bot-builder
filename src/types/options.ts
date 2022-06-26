@@ -1,3 +1,8 @@
+interface ErrorMessage {
+    emoji: string;
+    message: string;
+}
+
 interface HelpCommand {
     name: string;
     emoji: string;
@@ -5,11 +10,11 @@ interface HelpCommand {
     message: string;
 }
 
-interface NonExistent {
+interface NonExistentCommand {
     info: (commandName: string) => string;
     suggestion: string;
     listEmoji: string;
-    help: (helpCommand: string) => string;
+    helpInfo: (helpCommand: string) => string;
     similarity: number;
 }
 
@@ -23,8 +28,9 @@ interface TextFormatting {
 export interface Options {
     symbol: string;
     contentProp: string;
+    error: ErrorMessage;
     help: HelpCommand;
-    nonExistent: NonExistent;
+    nonExistent: NonExistentCommand;
     textFormatting: TextFormatting;
 }
 
