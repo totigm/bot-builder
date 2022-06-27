@@ -20,7 +20,7 @@ export default abstract class Bot<Client extends EventEmitter = EventEmitter, Bo
             exampleText: "For example",
             documentation: {
                 description: "Gives information about every command",
-                explanation: "Use this command followed by another's command's name to get more info about a it",
+                explanation: "Use this command followed by another command's name to get more info about a it",
                 exampleInput: "command name",
             },
         },
@@ -69,9 +69,9 @@ export default abstract class Bot<Client extends EventEmitter = EventEmitter, Bo
 
         const formattedCommand = this.boldText(this.options.symbol + commandName);
         const { exampleText, emoji } = this.options.help;
-        const { explanation, example } = command.documentation;
+        const { explanation, description, example } = command.documentation;
 
-        let message = `${emoji} ${this.boldText(commandName)}: ${explanation}.`;
+        let message = `${emoji} ${this.boldText(commandName)}: ${explanation ?? description}.`;
 
         if (example)
             message += `\n${exampleText}: ${formattedCommand} ${example.input} ${

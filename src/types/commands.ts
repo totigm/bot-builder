@@ -15,7 +15,7 @@ interface Example {
 
 export interface Documentation {
     description: string;
-    explanation: string;
+    explanation?: string;
     example?: Example;
 }
 
