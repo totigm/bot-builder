@@ -1,7 +1,7 @@
 import EventEmitter from "events";
 import { findBestMatch } from "string-similarity";
 import merge from "deepmerge";
-import { Command, CommandHandler, BaseMessage, Message, Options, DeepPartial, Documentation } from "../types";
+import { Command, CommandHandler, BaseMessage, Message, Options, DeepPartial, Documentation, TextFormatting } from "../types";
 
 export default abstract class Bot<Client extends EventEmitter = EventEmitter, BotMessage extends BaseMessage = BaseMessage> {
     private commands: Record<string, Command<Client, BotMessage>> = {};
@@ -184,25 +184,30 @@ export default abstract class Bot<Client extends EventEmitter = EventEmitter, Bo
             : console.log(`The ${commandName} command already exists`);
     }
 
-    private static formatText(text: string, symbol: string) {
-        const trimmedText = text.trim();
-        return trimmedText !== "" ? symbol + trimmedText + symbol : trimmedText;
+    public formatText(text: string, formatters: (keyof TextFormatting)[]): string {
+        const uniqueFormatters = formatters
+            .filter((value, index) => formatters.indexOf(value) === index)
+            .map((formatter) => this.options.textFormatting[formatter]);
+        const formatSymbols = uniqueFormatters.join("");
+        const reversedFormatSymbols = uniqueFormatters.reverse().join("");
+
+        return `${formatSymbols}${text}${reversedFormatSymbols}`;
     }
 
     public boldText(text: string) {
-        return Bot.formatText(text, this.options.textFormatting.bold);
+        return this.formatText(text, ["bold"]);
     }
 
     public italicText(text: string) {
-        return Bot.formatText(text, this.options.textFormatting.italic);
+        return this.formatText(text, ["italic"]);
     }
 
     public underlineText(text: string) {
-        return Bot.formatText(text, this.options.textFormatting.underline);
+        return this.formatText(text, ["underline"]);
     }
 
     public strikethroughText(text: string) {
-        return Bot.formatText(text, this.options.textFormatting.strikethrough);
+        return this.formatText(text, ["strikethrough"]);
     }
 
     public getCommand(name: string) {

@@ -21,7 +21,7 @@ interface NonExistentCommand {
     similarity: number;
 }
 
-interface TextFormatting {
+export interface TextFormatting {
     bold: string;
     italic: string;
     underline: string;
