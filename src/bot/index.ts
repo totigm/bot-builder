@@ -1,31 +1,33 @@
 import EventEmitter from "events";
 import { findBestMatch } from "string-similarity";
 import merge from "deepmerge";
-import { Command, CommandHandler, BaseMessage, Message, Options, DeepPartial } from "../types";
+import { Command, CommandHandler, BaseMessage, Message, Options, DeepPartial, Documentation } from "../types";
 
-export default abstract class Bot<
-    Client extends EventEmitter = EventEmitter,
-    BotMessage extends BaseMessage = BaseMessage,
-> {
+export default abstract class Bot<Client extends EventEmitter = EventEmitter, BotMessage extends BaseMessage = BaseMessage> {
     private commands: Record<string, Command<Client, BotMessage>> = {};
     private options: Options = {
         symbol: "!",
         contentProp: "content",
         error: {
             emoji: "❌",
-            message: "There was an error processing your command.",
+            message: "There was an error processing your command",
         },
         help: {
             name: "help",
             emoji: "❓",
-            description: "Gives information about every command.",
-            message: "I can handle the following commands:",
+            message: "I can handle the following commands",
+            exampleText: "For example",
+            documentation: {
+                description: "Gives information about every command",
+                explanation: "Use this command followed by another's command's name to get more info about a it",
+                exampleInput: "command name",
+            },
         },
         nonExistent: {
-            info: (commandName) => `${this.boldText(commandName)} doesn't exist.`,
-            suggestion: "Maybe you meant:",
+            info: (commandName) => `${this.boldText(commandName)} doesn't exist`,
+            suggestion: "Maybe you meant",
             listEmoji: "✅",
-            helpInfo: (helpCommand) => `Send ${this.boldText(helpCommand)} for more info.`,
+            helpInfo: (helpCommand) => `Send ${this.boldText(helpCommand)} for more info`,
             similarity: 0.5,
         },
         textFormatting: {
@@ -48,26 +50,64 @@ export default abstract class Bot<
 
     protected abstract auth(): void;
 
-    private addHelpCommand() {
+    private handleGeneralHelp() {
         const { help } = this.options;
 
-        // Specific commands help is missing
-        // `You can use ${this.options.symbol}${this.options.help.name} [command name] to get more info about commands.`
-        this.addCommand(help.name, help.description, () => {
-            const message = `${help.message}\n\n`;
-            const list = Object.entries(this.commands)
-                .map(([name, { description }]) => this.getFormattedDescription(name, description))
-                .join("\n");
+        let message = `${help.message}:\n`;
+        message += Object.entries(this.commands)
+            .map(([name, { documentation }]) => this.getFormattedDescription(name, documentation.description))
+            .join("\n");
 
-            return message + list;
-        });
+        return message;
+    }
+
+    private handleSpecificHelp(commandName: string) {
+        const command = this.commands[commandName];
+
+        if (!command) return this.getSimilarCommandsMessage(commandName);
+
+        const formattedCommand = this.boldText(this.options.symbol + commandName);
+        const { exampleText, emoji } = this.options.help;
+        const { explanation, example } = command.documentation;
+
+        let message = `${emoji} ${this.boldText(commandName)}: ${explanation}.`;
+
+        if (example)
+            message += `\n${exampleText}: ${formattedCommand} ${example.input} ${
+                example.output ? `${this.boldText("->")} ${example.output}` : ""
+            }`;
+
+        return message;
+    }
+
+    private addHelpCommand() {
+        const {
+            documentation: { description, explanation, exampleInput },
+            name,
+        } = this.options.help;
+
+        const docs: Documentation = {
+            description,
+            explanation,
+            example: {
+                input: `[${exampleInput}]`,
+            },
+        };
+
+        this.addCommand(
+            name,
+            (message) => {
+                const { args } = message;
+
+                return args.length > 0 ? this.handleSpecificHelp(args[0]) : this.handleGeneralHelp();
+            },
+            docs,
+        );
     }
 
     private getFormattedDescription(name: string, description: string) {
-        const { help, nonExistent: nonexistent } = this.options;
-        return `${name === help.name ? help.emoji : nonexistent.listEmoji} ${this.boldText(
-            name,
-        )}: ${description}`;
+        const { help, nonExistent } = this.options;
+        return `${name === help.name ? help.emoji : nonExistent.listEmoji} ${this.boldText(name)}: ${description}`;
     }
 
     private async handleMessage(message: BotMessage) {
@@ -80,16 +120,13 @@ export default abstract class Bot<
 
             let response;
             try {
-                response = command
-                    ? await command.handler(newMessage, this.client)
-                    : this.getSimilarCommandsMessage(newMessage.command);
+                response = command ? await command.handler(newMessage, this.client) : this.getSimilarCommandsMessage(newMessage.command);
             } catch (error) {
                 console.error(error);
-                response = `${this.options.error.emoji} ${this.options.error.message}`;
+                response = `${this.options.error.emoji} ${this.options.error.message}.`;
             }
 
-            if (response && (typeof response === "number" || response.trim() !== ""))
-                message.reply(String(response));
+            if (response && (typeof response === "number" || response.trim() !== "")) message.reply(String(response));
         }
     }
 
@@ -123,30 +160,26 @@ export default abstract class Bot<
 
         const { info, suggestion, listEmoji, helpInfo } = this.options.nonExistent;
 
-        let message = info(commandName);
+        let message = `${this.options.error.emoji} ${info(commandName)}.`;
 
         if (commands.length > 0) {
-            message += `\n\n${suggestion}\n`;
+            message += `\n\n${suggestion}:\n`;
             message += commands.map((name) => `${listEmoji} ${this.boldText(name)}`).join("\n");
         }
 
         const { emoji: helpEmoji, name: helpName } = this.options.help;
-        message += `\n\n${helpEmoji} ${helpInfo(this.options.symbol + helpName)}`;
+        message += `\n\n${helpEmoji} ${helpInfo(this.options.symbol + helpName)}.`;
 
         return message;
     }
 
-    public addCommand(
-        name: string,
-        description: string,
-        handler: CommandHandler<Client, BotMessage>,
-    ) {
+    public addCommand(name: string, handler: CommandHandler<Client, BotMessage>, documentation: Documentation) {
         const commandName = name.toLowerCase();
 
         !this.commands[commandName]
             ? (this.commands[commandName] = {
-                  description,
                   handler,
+                  documentation,
               })
             : console.log(`The ${commandName} command already exists`);
     }

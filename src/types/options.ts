@@ -1,3 +1,5 @@
+import { Documentation } from "./commands";
+
 interface ErrorMessage {
     emoji: string;
     message: string;
@@ -6,8 +8,9 @@ interface ErrorMessage {
 interface HelpCommand {
     name: string;
     emoji: string;
-    description: string;
     message: string;
+    exampleText: string;
+    documentation: Omit<Documentation, "example"> & { exampleInput: string };
 }
 
 interface NonExistentCommand {

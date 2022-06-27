@@ -8,7 +8,18 @@ export type CommandHandler<Client extends EventEmitter, Message extends BaseMess
     client: Client,
 ) => CommandResponse | Promise<CommandResponse>;
 
-export interface Command<Client extends EventEmitter, Message extends BaseMessage> {
+interface Example {
+    input: string;
+    output?: string;
+}
+
+export interface Documentation {
     description: string;
+    explanation: string;
+    example?: Example;
+}
+
+export interface Command<Client extends EventEmitter, Message extends BaseMessage> {
     handler: CommandHandler<Client, Message>;
+    documentation: Documentation;
 }
