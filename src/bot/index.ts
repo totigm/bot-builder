@@ -8,6 +8,7 @@ export default abstract class Bot<Client extends EventEmitter = EventEmitter, Bo
     private options: Options = {
         symbol: "!",
         contentProp: "content",
+        messageEvent: "message",
         error: {
             emoji: "❌",
             message: "There was an error processing your command",
@@ -131,7 +132,7 @@ export default abstract class Bot<Client extends EventEmitter = EventEmitter, Bo
     }
 
     private addOnMessageListener() {
-        this.client.on("message", (message: BotMessage) => {
+        this.client.on(this.options.messageEvent, (message: BotMessage) => {
             this.handleMessage(message);
         });
     }

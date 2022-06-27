@@ -31,6 +31,7 @@ export interface TextFormatting {
 export interface Options {
     symbol: string;
     contentProp: string;
+    messageEvent: string;
     error: ErrorMessage;
     help: HelpCommand;
     nonExistent: NonExistentCommand;
