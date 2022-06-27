@@ -1,7 +1,7 @@
 import EventEmitter from "events";
 import { findBestMatch } from "string-similarity";
 import merge from "deepmerge";
-import { Command, CommandHandler, BaseMessage, Message, Options, DeepPartial, Documentation, TextFormatting } from "../types";
+import { Command, CommandHandler, BaseMessage, Message, Options, Documentation, TextFormatting, PartialOptions } from "../types";
 
 export default abstract class Bot<Client extends EventEmitter = EventEmitter, BotMessage extends BaseMessage = BaseMessage> {
     private commands: Record<string, Command<Client, BotMessage>> = {};
@@ -39,7 +39,7 @@ export default abstract class Bot<Client extends EventEmitter = EventEmitter, Bo
         },
     };
 
-    constructor(protected client: Client, options?: DeepPartial<Options>) {
+    constructor(protected client: Client, options?: PartialOptions) {
         this.options = merge(this.options, options) as Options;
         this.auth();
         this.addHelpCommand();
