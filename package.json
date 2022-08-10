@@ -15,9 +15,13 @@
         "prettier": "prettier --check src",
         "prettier:fix": "prettier --write src"
     },
-    "dependencies": {},
+    "dependencies": {
+        "deepmerge": "^4.2.2",
+        "string-similarity": "^4.0.4"
+    },
     "devDependencies": {
         "@types/node": "^15.6.1",
+        "@types/string-similarity": "^4.0.0",
         "@typescript-eslint/eslint-plugin": "^5.33.0",
         "@typescript-eslint/parser": "^5.33.0",
         "eslint": "^8.21.0",
