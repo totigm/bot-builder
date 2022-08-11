@@ -10,6 +10,9 @@
   <a href="https://www.npmjs.com/package/@totigm/bot-builder" target="_blank">
     <img alt="Downloads" src="https://img.shields.io/npm/dt/@totigm/bot-builder" />
   </a>
+  <a href="https://github.com/totigm/bot-builder/actions/workflows/main.yml" target="_blank">
+    <img alt="CI" src="https://github.com/totigm/bot-builder/actions/workflows/main.yml/badge.svg" />
+  </a>
   <a href="https://github.com/totigm/bot-builder/stargazers" target="_blank">
     <img alt="GitHub repo stars" src="https://img.shields.io/github/stars/totigm/bot-builder?style=flat">
   </a>
