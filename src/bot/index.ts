@@ -97,8 +97,8 @@ export default abstract class Bot<Client extends EventEmitter = EventEmitter, Bo
 
         if (!command) return this.getSimilarCommandsMessage(commandName);
 
-        const hasDocs = Object.keys(command.documentation).length > 0;
-        if (!command.documentation || !hasDocs) return this.options.botMessages.help.withoutDocumentation;
+        const hasDocs = command.documentation && Object.keys(command.documentation).length > 0;
+        if (!hasDocs) return `${this.options.botMessages.emoji.error} ${this.options.botMessages.help.withoutDocumentation}`;
 
         const explanationMessage = this.getExplanationMessage(commandName);
         const exampleMessage = this.getExampleMessage(commandName);

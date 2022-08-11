@@ -289,7 +289,7 @@ Part of the message before showing the example of the command usage.
 
 Message sent for the [specific help](#help) when the command doesn't have documentation.
 
-![specific help without documentation](https://user-images.githubusercontent.com/64804554/183619078-82dce993-3744-41e4-aefc-3767bd27fc58.png)
+![specific help without documentation](https://user-images.githubusercontent.com/64804554/184128687-90ed4b8b-35a1-4f71-9d61-d25e9b8aeaf7.png)
 
 - Default value: `This command doesn't have documentation`
 - Value type: `string`
