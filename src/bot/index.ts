@@ -191,11 +191,11 @@ export default abstract class Bot<Client extends EventEmitter = EventEmitter, Bo
 
     private getSuggestionsList(commands: string[]): string {
         const {
-            botMessages: { emoji, suggestion },
+            botMessages: { help, emoji, suggestion },
         } = this.options;
 
         if (commands.length > 0) {
-            const list = commands.map((name) => `${emoji.list} ${this.boldText(name)}`).join("\n");
+            const list = commands.map((name) => `${name !== help.name ? emoji.list : emoji.question} ${this.boldText(name)}`).join("\n");
 
             return `\n\n${suggestion.listMessage}:\n${list}`;
         }
