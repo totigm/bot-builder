@@ -5,7 +5,7 @@
     <img alt="NPM version" src="https://img.shields.io/npm/v/@totigm/bot-builder">
   </a>
   <a href="https://github.com/totigm/bot-builder" target="_blank">
-    <img alt="GitHub repo" src="https://img.shields.io/badge/GitHub-%40totigm%2Fbot--builder%20-green">
+    <img alt="GitHub repo" src="https://img.shields.io/badge/GitHub-@totigm/bot--builder-green?style=flat&logo=github">
   </a>
   <a href="https://www.npmjs.com/package/@totigm/bot-builder" target="_blank">
     <img alt="Downloads" src="https://img.shields.io/npm/dt/@totigm/bot-builder" />
