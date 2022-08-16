@@ -83,12 +83,12 @@ export default abstract class Bot<Client extends EventEmitter = EventEmitter, Bo
 
         const exampleArgs = {
             input: example?.input ? `${example.input} ` : "",
-            output: example.output ? `${this.boldText("->")} ${example.output}` : "",
+            output: example?.output ? `${this.boldText("->")} ${example.output}` : "",
         };
 
         const hasExample = Object.values(exampleArgs).some((value) => value !== "");
         return hasExample
-            ? `${this.options.botMessages.help.exampleText}: ${formattedCommand} ${exampleArgs.input}${exampleArgs.output}`
+            ? `\n${this.options.botMessages.help.exampleText}: ${formattedCommand} ${exampleArgs.input}${exampleArgs.output}`
             : "";
     }
 
@@ -103,7 +103,7 @@ export default abstract class Bot<Client extends EventEmitter = EventEmitter, Bo
         const explanationMessage = this.getExplanationMessage(commandName);
         const exampleMessage = this.getExampleMessage(commandName);
 
-        return `${explanationMessage}\n${exampleMessage}`;
+        return `${explanationMessage}${exampleMessage}`;
     }
 
     private addHelpCommand() {
