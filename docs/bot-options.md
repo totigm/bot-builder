@@ -25,6 +25,7 @@ Your bot can be customized if you want it to have a different behaviour. The opt
   - [help](#help)
     - [name](#name)
     - [message](#message)
+    - [specificHelpMessage](#specifichelpmessage)
     - [documentation](#documentation)
       - [description](#description)
       - [explanation](#explanation)
@@ -107,6 +108,7 @@ Messages that the bot sends to the user for various situations.
   - [help](#help)
     - [name](#name)
     - [message](#message)
+    - [specificHelpMessage](#specifichelpmessage)
     - [documentation](#documentation)
       - [description](#description)
       - [explanation](#explanation)
@@ -205,16 +207,17 @@ Messages sent by the bot when the user sends the `help` command.
 
 General help:
 
-![general help message](https://user-images.githubusercontent.com/64804554/183616403-68b5d012-5f63-4a21-93a3-d04567ca7c7f.png)
+![general help message](https://user-images.githubusercontent.com/64804554/185166269-56c53425-5344-4e6a-bec5-401eaf1d93b0.png)
 
 
 Specific command help:
 
-![specific command help message](https://user-images.githubusercontent.com/64804554/183616818-d2c86113-df5b-4ca3-8c9d-b55d1beb6fd0.png)
+![specific command help message](https://user-images.githubusercontent.com/64804554/185166562-0e367abd-1318-4b25-8f3a-9f9174ac3a18.png)
 
 Value type: `object`
   - [name](#name)
   - [message](#message)
+  - [specificHelpMessage](#specifichelpmessage)
   - [documentation](#documentation)
     - [description](#description)
     - [explanation](#explanation)
@@ -226,7 +229,7 @@ Value type: `object`
 
 Name of the help command.
 
-![name of the command](https://user-images.githubusercontent.com/64804554/183617011-3b407eba-1f8a-41f3-8c10-87498ec5cca2.png)
+![name of the command](https://user-images.githubusercontent.com/64804554/185167205-1b29fd72-9025-4712-aae4-fbfa3cef791e.png)
 
 - Default value: `help`
 - Value type: `string`
@@ -235,10 +238,17 @@ Name of the help command.
 
 Part of the message before listing available commands.
 
-![help message](https://user-images.githubusercontent.com/64804554/183617132-712475cf-21f2-41df-9b35-4f244d925403.png)
+![help message](https://user-images.githubusercontent.com/64804554/185167516-a6dab8a6-fdfd-43b3-88c0-c6d3718b34ff.png)
 
 - Default value: `I can handle the following commands`
 - Value type: `string`
+
+### specificHelpMessage
+
+![specific help part on general help](https://user-images.githubusercontent.com/64804554/185169052-b5414dc0-1ec5-4b2b-9b6b-b3e2474c71f0.png)
+
+- Default value: ``(specificHelpCommand) => `Send ${specificHelpCommand} for more information about commands` ``
+- Value type: `string | ((specificHelpCommand: string) => string)`
 
 ### documentation
 
@@ -253,7 +263,7 @@ Documentation object for the help command.
 
 Short description of the help command.
 
-![help command description](https://user-images.githubusercontent.com/64804554/183618170-00da2ded-f7da-44d4-ab29-0a4588a1e7e8.png)
+![help command description](https://user-images.githubusercontent.com/64804554/185168268-9578dfe4-dc39-439c-97d6-5f99957fe0c0.png)
 
 - Default value: `Gives information about every command`
 - Value type: `string`
@@ -262,7 +272,7 @@ Short description of the help command.
 
 Detailed explanation of the help command.
 
-![help command explanation](https://user-images.githubusercontent.com/64804554/183618325-a8d7bf6f-2bc1-4a28-ad9f-c7bcaff42085.png)
+![help command explanation](https://user-images.githubusercontent.com/64804554/185170170-dd384eeb-9e54-4832-aa00-bb36088a478d.png)
 
 - Default value: `Use this command followed by another command's name to get more info about a it`
 - Value type: `string`
@@ -271,7 +281,9 @@ Detailed explanation of the help command.
 
 Example of the command usage.
 
-![help command example input](https://user-images.githubusercontent.com/64804554/183618534-7fd1bca0-0eb0-4f72-9abb-18796c39fced.png)
+![specifichelp command example input](https://user-images.githubusercontent.com/64804554/185170500-6fe82bf0-57d1-4290-8c32-0bac6bd8227a.png)
+
+![general help command example input](https://user-images.githubusercontent.com/64804554/185170916-2535fd34-b8c7-4e98-8755-248fb819b01d.png)
 
 - Default value: `command name`
 - Value type: `string`
@@ -280,7 +292,7 @@ Example of the command usage.
 
 Part of the message before showing the example of the command usage.
 
-![example help text](https://user-images.githubusercontent.com/64804554/183617886-27d78748-67e5-422e-bb9f-213c7834ca19.png)
+![example help text](https://user-images.githubusercontent.com/64804554/185170707-6f140a52-99e9-4239-b032-9faaddc79000.png)
 
 - Default value: `For example`
 - Value type: `string`
