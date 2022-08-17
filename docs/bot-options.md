@@ -245,6 +245,8 @@ Part of the message before listing available commands.
 
 ### specificHelpMessage
 
+Part of the general help message suggesting to use the specific help command.
+
 ![specific help part on general help](https://user-images.githubusercontent.com/64804554/185169052-b5414dc0-1ec5-4b2b-9b6b-b3e2474c71f0.png)
 
 - Default value: ``(specificHelpCommand) => `Send ${specificHelpCommand} for more information about commands` ``
