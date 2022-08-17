@@ -33,6 +33,7 @@ export default abstract class Bot<Client extends EventEmitter = EventEmitter, Bo
                 },
                 exampleText: "For example",
                 withoutDocumentation: "This command doesn't have documentation",
+                specificHelpMessage: (specificHelpCommand) => `Send ${specificHelpCommand} for more information about commands`,
             },
             suggestion: {
                 similarity: 0.5,
@@ -56,13 +57,23 @@ export default abstract class Bot<Client extends EventEmitter = EventEmitter, Bo
     protected abstract auth(): void;
 
     private handleGeneralHelp() {
-        const { help } = this.options.botMessages;
+        const {
+            symbol,
+            botMessages: { help },
+        } = this.options;
 
         const commandsList = Object.entries(this.commands)
             .map(([name, { documentation }]) => this.getFormattedDescription(name, documentation?.description))
             .join("\n");
 
-        return help.message + ":\n\n" + commandsList;
+        const specificHelpCommand = `${symbol}${help.name} [${help.documentation.exampleInput}]`;
+
+        const specificHelpMessage =
+            typeof help.specificHelpMessage === "function"
+                ? help.specificHelpMessage(this.boldText(specificHelpCommand))
+                : help.specificHelpMessage;
+
+        return `${help.message}:\n\n${commandsList}\n\n${specificHelpMessage}.`;
     }
 
     private getExplanationMessage(commandName: string) {
@@ -78,18 +89,18 @@ export default abstract class Bot<Client extends EventEmitter = EventEmitter, Bo
     private getExampleMessage(commandName: string) {
         const command = this.commands[commandName];
 
-        const formattedCommand = this.boldText(this.options.symbol + commandName);
+        const formattedCommand = this.options.symbol + commandName;
         const { example } = command.documentation;
 
         const exampleArgs = {
-            input: example?.input ? `${example.input} ` : "",
-            output: example?.output ? `${this.boldText("->")} ${example.output}` : "",
+            input: example?.input ? ` ${example.input}` : "",
+            output: example?.output ? ` -> ${example.output}` : "",
         };
 
+        const exampleCommand = `${formattedCommand}${exampleArgs.input}${exampleArgs.output}`;
+
         const hasExample = Object.values(exampleArgs).some((value) => value !== "");
-        return hasExample
-            ? `\n${this.options.botMessages.help.exampleText}: ${formattedCommand} ${exampleArgs.input}${exampleArgs.output}`
-            : "";
+        return hasExample ? `\n${this.options.botMessages.help.exampleText}: ${this.boldText(exampleCommand)}` : "";
     }
 
     private handleSpecificHelp(commandName: string) {

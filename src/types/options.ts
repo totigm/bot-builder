@@ -22,6 +22,7 @@ interface Help {
     exampleText: string;
     documentation: Omit<Documentation, "example"> & { exampleInput: string };
     withoutDocumentation: string;
+    specificHelpMessage: string | ((specificHelpCommand: string) => string);
 }
 
 interface Suggestion {
