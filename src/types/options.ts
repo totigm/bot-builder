@@ -45,6 +45,7 @@ export interface Options {
     messageEvent: string;
     textFormatting: TextFormatting;
     botMessages: BotMessages;
+    authData?: unknown;
 }
 
 type DeepPartial<T> = T extends unknown

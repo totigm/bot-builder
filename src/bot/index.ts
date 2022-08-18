@@ -46,7 +46,7 @@ export default abstract class Bot<Client extends EventEmitter = EventEmitter, Bo
 
     constructor(protected client: Client, options?: PartialOptions) {
         this.options = merge(this.options, options) as Options;
-        this.auth();
+        this.auth(options.authData);
         this.addHelpCommand();
         this.addOnMessageListener();
         this.client.on("ready", () => {
@@ -54,7 +54,7 @@ export default abstract class Bot<Client extends EventEmitter = EventEmitter, Bo
         });
     }
 
-    protected abstract auth(): void;
+    protected abstract auth(authData?: unknown): void;
 
     private handleGeneralHelp() {
         const {
