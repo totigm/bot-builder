@@ -32,6 +32,7 @@ Your bot can be customized if you want it to have a different behaviour. The opt
       - [exampleInput](#exampleinput)
     - [exampleText](#exampletext)
     - [withoutDocumentation](#withoutdocumentation)
+    - [authData](#authdata)
 
 # symbol
 
@@ -115,6 +116,7 @@ Messages that the bot sends to the user for various situations.
       - [exampleInput](#exampleinput)
     - [exampleText](#exampletext)
     - [withoutDocumentation](#withoutdocumentation)
+    - [authData](#authdata)
 
 ## error
 
@@ -224,6 +226,7 @@ Value type: `object`
     - [exampleInput](#exampleinput)
   - [exampleText](#exampletext)
   - [withoutDocumentation](#withoutdocumentation)
+  - [authData](#authdata)
 
 ### name
 
@@ -307,3 +310,10 @@ Message sent for the [specific help](#help) when the command doesn't have docume
 
 - Default value: `This command doesn't have documentation`
 - Value type: `string`
+
+### authData
+
+Data that will be passed to the `auth` method. Could be tokens, or whatever you need.
+
+- Default value: `null`
+- Value type: `any`
