@@ -182,13 +182,16 @@ export default abstract class Bot<Client extends EventEmitter = EventEmitter, Bo
     }
 
     private formatMessage(content: string): Message {
-        const splittedMessage = content.trim().split(" ");
-        const args = splittedMessage.slice(1);
+        const commandName =
+            Object.keys(this.commands).find((commandName) => content.substring(this.options.symbol.length).startsWith(commandName)) ??
+            content.trim().split(" ")[0].substring(this.options.symbol.length);
+
+        const text = content.substring(this.options.symbol.length + commandName.length).trim();
 
         return {
-            command: splittedMessage[0].substring(this.options.symbol.length).toLowerCase(),
-            text: args.join(" "),
-            args,
+            command: commandName.toLowerCase(),
+            text,
+            args: text !== "" ? text.split(" ") : [],
         };
     }
 
