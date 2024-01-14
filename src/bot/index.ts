@@ -181,14 +181,86 @@ export default abstract class Bot<Client extends EventEmitter = EventEmitter, Bo
         });
     }
 
+    private extractArguments(command: string): string[] {
+        const args = []; // Array to hold the extracted arguments
+        let current = ""; // String to build the current argument
+        // Disabled to allow single quotes
+        // eslint-disable-next-line @typescript-eslint/quotes
+        let quoteChar: '"' | "'" | null = null; // Variable to track the type of quote in use (null, '"', or "'")
+
+        // Loop through each character in the command string
+        for (const char of command) {
+            // Check if the character is a quote (either single or double) that starts or ends an argument
+            // eslint-disable-next-line @typescript-eslint/quotes
+            if ((char === '"' || char === "'") && (quoteChar === null || quoteChar === char)) {
+                // If we're already inside quotes, this quote ends the argument
+                // Otherwise, this quote starts an argument
+                quoteChar = quoteChar ? null : char;
+                continue; // Move to the next character
+            }
+
+            // If we're not inside quotes and the character is a space,
+            // it signifies the end of the current argument
+            if (!quoteChar && char === " ") {
+                if (current) {
+                    args.push(current); // Add the completed argument to the array
+                    current = ""; // Reset the current argument
+                }
+                continue; // Move to the next character
+            }
+
+            // Add the current character to the argument being built
+            current += char;
+        }
+
+        // If there's an argument being built when the loop finishes, add it to the array of arguments
+        if (current) {
+            args.push(current);
+        }
+
+        return args;
+    }
+
+    private parseArgument(arg: string): { key: string; value: string | true } {
+        const delimiterRegex = /=|:/;
+
+        // Split the argument into key and value parts on the first '=' or ':' character
+        const symbolIndex = arg.match(delimiterRegex)?.index;
+
+        // If a delimiter is not found, or if the delimiter is the first character, the argument is treated as a flag
+        if (symbolIndex === undefined || symbolIndex === 0) {
+            return { key: arg.replace(delimiterRegex, ""), value: true };
+        }
+
+        const key = arg.substring(0, symbolIndex);
+        const rawValue = arg.substring(symbolIndex + 1);
+
+        // If there isn't a value, it means the argument is a flag
+        if (!rawValue) {
+            return { key, value: true };
+        }
+
+        // For arguments with a value, remove any enclosing quotes and return the key-value pair
+        return { key, value: rawValue.replace(/(^"|"$)|(^'|'$)/g, "") };
+    }
+
     private formatMessage(content: string): Message {
-        const splittedMessage = content.trim().split(" ");
+        const contentWithoutSymbol = content.trim().substring(this.options.symbol.length);
+        const splittedMessage = this.extractArguments(contentWithoutSymbol);
+        const command = splittedMessage[0].toLowerCase();
         const args = splittedMessage.slice(1);
 
+        // Parse each argument into a key-value map
+        const argsMap = args.reduce((acc, arg) => {
+            const { key, value } = this.parseArgument(arg);
+            return { ...acc, [key]: value };
+        }, {});
+
         return {
-            command: splittedMessage[0].substring(this.options.symbol.length).toLowerCase(),
+            command,
             text: args.join(" "),
             args,
+            argsMap,
         };
     }
 
