@@ -159,7 +159,11 @@ export default abstract class Bot<Client extends EventEmitter = EventEmitter, Bo
         } = this.options;
 
         if (content && content.startsWith(symbol)) {
-            const newMessage = Object.assign(message, this.formatMessage(content));
+            const formattedMessage = this.formatMessage(content);
+
+            if (!formattedMessage) return;
+
+            const newMessage = Object.assign(message, formattedMessage);
 
             const command = this.commands[newMessage.command];
 
@@ -244,9 +248,12 @@ export default abstract class Bot<Client extends EventEmitter = EventEmitter, Bo
         return { key, value: rawValue.replace(/(^"|"$)|(^'|'$)/g, "") };
     }
 
-    private formatMessage(content: string): Message {
+    private formatMessage(content: string): Message | null {
         const contentWithoutSymbol = content.trim().substring(this.options.symbol.length);
         const splittedMessage = this.extractArguments(contentWithoutSymbol);
+
+        if (splittedMessage.length === 0) return null;
+
         const command = splittedMessage[0].toLowerCase();
         const args = splittedMessage.slice(1);
 
